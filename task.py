@@ -14,7 +14,13 @@ def store_translation(t):
 ## Run a pretrained deep learning model 
 def run_translation(t_id:int):
    model = TranslationModel.get_by_id(t_id)
-   prefex = f"tranlate {model.base_lang} to {model.final_lang}: hellow world"
+   prefex = f"tranlate {model.base_lang} to {model.final_lang}: {model.text}"
+   input_ids = tokenizer(prefex, return_tensors = "pt").input_ids
+   
+   outputs = translator.generate(input_ids, max_new_tockens=512)
+   translation  = tokenizer.decode(outputs[0], skip_special_tokens=True)
+   model.translation = translation
+   model.save() 
 
 
 ##find_translation
